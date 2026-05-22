@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: mysql:8
@@ -13,6 +15,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - shortlink-network
 
   frontend:
     build: ./frontend
@@ -20,13 +24,20 @@ services:
       - "3000"
     networks:
       - shortlink-network
+    restart: always
 
   backend:
     build: ./backend
     expose:
       - "5000"
+    environment:
+      - DB_HOST=db 
     networks:
       - shortlink-network
+    depends_on:
+      db:
+        condition: service_healthy 
+    restart: always
 
   nginx:
     image: nginx:alpine
@@ -40,6 +51,7 @@ services:
     depends_on:
       - frontend
       - backend
+    restart: always
 
   ngrok:
     image: ngrok/ngrok:latest
@@ -49,7 +61,7 @@ services:
       - NGROK_AUTHTOKEN=3E4Bdftk5IBDRcYUvIaMBxBd54g_2NY8yBXoKBJrHkG2Tgtuk
     command:
       - "http"
-      - "nginx:80" # Ngrok gọi thẳng tên service "nginx" ở cổng 80
+      - "nginx:80"
     networks:
       - shortlink-network
     depends_on:
