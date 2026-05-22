@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173';
 
 export const shortenUrl = async (originalUrl) => {
     const response = await axios.post(`${API_BASE_URL}/shorten`, { originalUrl });
@@ -29,5 +28,5 @@ export const fetchUrlInfo = async (shortCode) => {
 };
 
 export const getDisplayUrl = (shortCode) => {
-    return `${FRONTEND_URL}/r/${shortCode}`;
+    return `${window.location.origin}/r/${shortCode}`;
 };
