@@ -47,5 +47,13 @@ services:
       - frontend
       - backend
 
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared_tunnel
+    restart: always
+    command: tunnel run --token eyJhIjoiNzkzYjdmYjY0MDc2ZWVlZGJjMjMyOTA0OGE0MTgwNGYiLCJ0IjoiMTY3OTM3YzgtMDZiYS00MjZjLTkzZDItNjZhODE0YTBjNTNhIiwicyI6Ik5XRTFZekJpWmpVdE1tUm1NaTAwTW1Jd0xXRXhZbUl0TURka1lXSmlaVFF5Wm1ReiJ9
+    depends_on:
+      - nginx
+
 volumes:
   db_data:
