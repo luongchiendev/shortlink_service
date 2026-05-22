@@ -46,7 +46,7 @@ services:
     container_name: ngrok_tunnel
     restart: always
     environment:
-      - NGROK_AUTHTOKEN=DÁN_TOKEN_THẬT_CỦA_BẠN_VÀO_ĐÂY
+      - NGROK_AUTHTOKEN=3E4Bdftk5IBDRcYUvIaMBxBd54g_2NY8yBXoKBJrHkG2Tgtuk
     command:
       - "http"
       - "nginx:80" # Ngrok gọi thẳng tên service "nginx" ở cổng 80
