@@ -19,7 +19,7 @@ import {
   Alert
 } from '@mui/material';
 import { ContentCopy, Link as LinkIcon, History as HistoryIcon, ClearAll } from '@mui/icons-material';
-import { shortenUrl, getShortLink } from '../api/urlApi.js';
+import { shortenUrl, getDisplayUrl } from '../api/urlApi.js';
 import { Header } from '../components/layout/Header.jsx';
 
 function Home() {
@@ -36,7 +36,11 @@ function Home() {
   useEffect(() => {
     const savedHistory = localStorage.getItem('url_history_react');
     if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
+      // Filter out stale entries where shortLink was a Promise (stored as {})
+      const parsed = JSON.parse(savedHistory).filter(
+        (item) => typeof item.shortLink === 'string'
+      );
+      setHistory(parsed);
     }
   }, []);
 
@@ -49,7 +53,7 @@ function Home() {
 
     try {
       const response = await shortenUrl(originalUrl);
-      const shortLink = getShortLink(response.shortCode);
+      const shortLink = getDisplayUrl(response.shortCode);
       setShortenedUrl(shortLink);
 
       const newEntry = { ...response, shortLink };
@@ -93,8 +97,10 @@ function Home() {
                 onChange={(e) => setOriginalUrl(e.target.value)}
                 error={!!error}
                 helperText={error}
-                InputProps={{
-                  startAdornment: <LinkIcon sx={{ mr: 1, color: 'text.secondary' }} />,
+                slotProps={{
+                  input: {
+                    startAdornment: <LinkIcon sx={{ mr: 1, color: 'text.secondary' }} />,
+                  }
                 }}
               />
               <button

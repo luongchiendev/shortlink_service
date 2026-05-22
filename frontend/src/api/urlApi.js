@@ -23,8 +23,11 @@ export const getUrlInfo = async (code) => {
     return response.data;
 };
 
-export const getShortLink = async (shortCode) => {
-    // Pointing to frontend redirect page instead of backend
+export const fetchUrlInfo = async (shortCode) => {
     const response = await axios.get(`${API_BASE_URL}/urls/info/${shortCode}`);
     return response.data;
+};
+
+export const getDisplayUrl = (shortCode) => {
+    return `${FRONTEND_URL}/r/${shortCode}`;
 };

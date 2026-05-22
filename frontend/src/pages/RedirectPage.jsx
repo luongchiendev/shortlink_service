@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Box, Typography, CircularProgress, Paper, useTheme } from '@mui/material';
-import { getShortLink } from '../api/urlApi.js';
+import { fetchUrlInfo } from '../api/urlApi.js';
 
 const RedirectPage = () => {
     const { code } = useParams();
@@ -14,7 +14,7 @@ const RedirectPage = () => {
     useEffect(() => {
         const fetchUrl = async () => {
             try {
-                const data = await getShortLink(code);
+                const data = await fetchUrlInfo(code);
                 console.log(data);
                 setTargetUrl(data.originalUrl);
             } catch (err) {
