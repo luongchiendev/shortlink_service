@@ -31,6 +31,10 @@ services:
     expose:
       - "5000"
     environment:
+      - DB_USER=root                    
+      - DB_PASS=123456            
+      - DB_NAME=sys              
+      - PORT=5000
       - DB_HOST=db 
     networks:
       - shortlink-network
