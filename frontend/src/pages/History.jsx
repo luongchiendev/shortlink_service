@@ -20,7 +20,7 @@ import {
     Alert
 } from '@mui/material';
 import { ContentCopy, Delete } from '@mui/icons-material';
-import { listAllUrls, deleteUrl } from '../api/urlApi.js';
+import { listAllUrls, deleteUrl, getDisplayUrl } from '../api/urlApi.js';
 
 const HistoryPage = () => {
     const [urls, setUrls] = useState([]);
@@ -112,7 +112,7 @@ const HistoryPage = () => {
                                 <TableRow key={url.id} hover>
                                     <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                                     <TableCell>
-                                        <Link href={`http://localhost:5173/r/${url.shortCode}`} target="_blank" color="secondary" sx={{ fontWeight: 600 }}>
+                                        <Link href={getDisplayUrl(url.shortCode)} target="_blank" color="secondary" sx={{ fontWeight: 600 }}>
                                             {url.shortCode}
                                         </Link>
                                     </TableCell>
@@ -123,7 +123,7 @@ const HistoryPage = () => {
                                     <TableCell align="right">
                                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                                             <Tooltip title="Sao chép">
-                                                <IconButton size="small" onClick={() => copyToClipboard(`http://localhost:5173/r/${url.shortCode}`)}>
+                                                <IconButton size="small" onClick={() => copyToClipboard(getDisplayUrl(url.shortCode))}>
                                                     <ContentCopy fontSize="small" />
                                                 </IconButton>
                                             </Tooltip>
