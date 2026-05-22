@@ -14,68 +14,49 @@ services:
       timeout: 5s
       retries: 5
 
-  backend:
-    build: ./backend
-    container_name: shortlink_backend
-    restart: unless-stopped
-    env_file: .env
-    environment:
-      DB_HOST: db
-    networks:
-      - shortlink-net
-    ports:
-      - "3000:3000"
-    depends_on:
-      db:
-        condition: service_healthy
-
   frontend:
     build: ./frontend
-    container_name: shortlink_frontend
-    restart: unless-stopped
+    expose:
+      - "3000"
     networks:
-      - shortlink-net
-    ports:
-      - "5000:5000"
-    depends_on:
-      - backend
-  
+      - shortlink-network
+
+  backend:
+    build: ./backend
+    expose:
+      - "5000"
+    networks:
+      - shortlink-network
+
   nginx:
     image: nginx:alpine
     container_name: nginx_proxy
-    networks:
-      - shortlink-net
     ports:
       - "80:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - shortlink-network
     depends_on:
       - frontend
       - backend
 
-  # tunnel:
-  #   image: cloudflare/cloudflared:latest
-  #   container_name: cloudflared_tunnel
-  #   restart: always
-  #   command: tunnel run --token eyJhIjoiNzkzYjdmYjY0MDc2ZWVlZGJjMjMyOTA0OGE0MTgwNGYiLCJ0IjoiMTY3OTM3YzgtMDZiYS00MjZjLTkzZDItNjZhODE0YTBjNTNhIiwicyI6Ik5XRTFZekJpWmpVdE1tUm1NaTAwTW1Jd0xXRXhZbUl0TURka1lXSmlaVFF5Wm1ReiJ9
-  #   depends_on:
-  #     - nginx
-
   ngrok:
     image: ngrok/ngrok:latest
+    container_name: ngrok_tunnel
     restart: always
     environment:
-      - NGROK_AUTHTOKEN=3E4Bdftk5IBDRcYUvIaMBxBd54g_2NY8yBXoKBJrHkG2Tgtuk
-    networks:
-      - shortlink-net
+      - NGROK_AUTHTOKEN=DÁN_TOKEN_THẬT_CỦA_BẠN_VÀO_ĐÂY
     command:
       - "http"
-      - "nginx:80"
+      - "nginx:80" # Ngrok gọi thẳng tên service "nginx" ở cổng 80
+    networks:
+      - shortlink-network
     depends_on:
       - nginx
 
-  networks:
-  shortlink-net:
+networks:
+  shortlink-network:
     driver: bridge
 
 volumes:
