@@ -21,6 +21,8 @@ services:
     env_file: .env
     environment:
       DB_HOST: db
+    networks:
+      - shortlink-net
     ports:
       - "3000:3000"
     depends_on:
@@ -31,6 +33,8 @@ services:
     build: ./frontend
     container_name: shortlink_frontend
     restart: unless-stopped
+    networks:
+      - shortlink-net
     ports:
       - "5000:5000"
     depends_on:
@@ -39,6 +43,8 @@ services:
   nginx:
     image: nginx:alpine
     container_name: nginx_proxy
+    networks:
+      - shortlink-net
     ports:
       - "80:80"
     volumes:
@@ -60,11 +66,17 @@ services:
     restart: always
     environment:
       - NGROK_AUTHTOKEN=3E4Bdftk5IBDRcYUvIaMBxBd54g_2NY8yBXoKBJrHkG2Tgtuk
+    networks:
+      - shortlink-net
     command:
       - "http"
       - "nginx:80"
     depends_on:
       - nginx
+
+  networks:
+  shortlink-net:
+    driver: bridge
 
 volumes:
   db_data:
